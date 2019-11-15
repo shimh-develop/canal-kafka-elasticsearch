@@ -1,0 +1,52 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: application
+  data:
+    elasticsearch:
+      cluster-name: elasticsearch
+      cluster-nodes: localhost:9300
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      retries: 0
+      batch-size: 16384
+      buffer-memory: 33554432
+      acks: 1
+      properties:
+        linger.ms: 1500
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      enable-auto-commit: false # 默认 true
+      group-id: consumer
+      #properties:
+        #auto.commit.interval.ms: 1000 # 默认 5000 enable-auto-commit为true有用
+        #session.timeout.ms: 30000 # 默认 10000
+        #request.timeout.ms: 50000 # 默认 30000
+        #heartbeat.interval.ms: 25000 # 默认 3000 必须比session.timeout.ms小 通常不高于它的1/3
+        #max.poll.interval.ms: 500000 # 默认 300000
+        #partition.assignment.strategy: org.apache.kafka.clients.consumer.RoundRobinAssignor
+      max-poll-records: 100 # 默认 500
+    listener:
+      #poll-timeout: 1500ms
+      ack-mode: manual_immediate # 手动提交 offset
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=utf8&autoReconnect=true
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+
+canal:
+  ip: 127.0.0.1
+  port: 11111
+  destination: example
+  batch-size: 1500
+
